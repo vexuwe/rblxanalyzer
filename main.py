@@ -42,7 +42,7 @@ def load_ids():
         return [line.strip() for line in f if line.strip()]
 
 def save_csv(rows):
-    with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as f:
+    with open(OUTPUT_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
             f,
             fieldnames=[
