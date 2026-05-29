@@ -41,24 +41,24 @@ def load_ids():
         return [line.strip() for line in f if line.strip()]
 
 def save_csv(rows):
-    file_exists = os.path.exists(OUTPUT_FILE)
-    with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=[
-                "game_id",
-                "name",
-                "creator",
-                "creator_type",
-                "playing",
-                "visits",
-                "favorites",
-                "created",
-                "updated",
-                "checked_at",
-            ],
-        )
-        if not file_exists:
+    field_names = [
+        "game_id",
+        "name",
+        "creator",
+        "creator_type",
+        "playing",
+        "visits",
+        "favorites",
+        "created",
+        "updated",
+        "checked_at",
+    ]
+    is_empty = (
+        not os.path.exists(OUTPUT_FILE) or os.path.getsize(OUTPUT_FILE) == 0
+    )
+    with open(OUTPUT_FILE, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=field_names)
+        if is_empty:
             writer.writeheader()
         writer.writerows(rows)
 
