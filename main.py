@@ -42,7 +42,7 @@ def load_ids():
 
 def save_csv(rows):
     file_exists = os.path.exists(OUTPUT_FILE)
-    with open(OUTPUT_FILE, "a", newline="", encoding="utf-8") as f:
+    with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
             f,
             fieldnames=[
