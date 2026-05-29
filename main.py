@@ -41,7 +41,7 @@ def load_ids():
         return [line.strip() for line in f if line.strip()]
 
 def save_csv(rows):
-field_names = [
+    field_names = [
         "game_id",
         "name",
         "creator",
@@ -58,10 +58,11 @@ field_names = [
     )
     with open(OUTPUT_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=field_names)
-
         if is_empty:
+            # Если файл пустой, просто пишем шапку таблицы
             writer.writeheader()
         else:
+            # Если файл уже ведется, вставляем пустую строку перед новой сессией
             f.write("\n")
         writer.writerows(rows)
 
