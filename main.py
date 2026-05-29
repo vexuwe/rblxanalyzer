@@ -6,7 +6,6 @@ import requests
 GAMES_FILE = "games.txt"
 OUTPUT_FILE = "games.csv"
 
-
 def get_universe_id(place_id):
     url = f"https://apis.roblox.com/universes/v1/places/{place_id}/universe"
     r = requests.get(url)
@@ -15,8 +14,7 @@ def get_universe_id(place_id):
     data = r.json()
     return data.get("universeId")
 
-
-def get_game_data(universe_id):
+def get_game_data(universe_id, start_time):
     url = f"https://games.roblox.com/v1/games?universeIds={universe_id}"
     r = requests.get(url)
     if r.status_code != 200:
@@ -35,6 +33,7 @@ def get_game_data(universe_id):
         "favorites": game.get("favoritedCount", 0),
         "created": game["created"],
         "updated": game["updated"],
+        "checked_at": start_time,  # Пишем время запуска скрипта
     }
 
 def load_ids():
@@ -42,6 +41,7 @@ def load_ids():
         return [line.strip() for line in f if line.strip()]
 
 def save_csv(rows):
+    file_exists = os.path.exists(OUTPUT_FILE)
     with open(OUTPUT_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
             f,
@@ -55,12 +55,16 @@ def save_csv(rows):
                 "favorites",
                 "created",
                 "updated",
+                "checked_at",
             ],
         )
-        writer.writeheader()
+        if not file_exists:
+            writer.writeheader()
         writer.writerows(rows)
 
 def main():
+    # Фиксируем точное время старта скрипта (в формате ГГГГ-ММ-ДД ЧЧ:ММ:СС)
+    script_start_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     ids = load_ids()
     rows = []
     for game_id in ids:
@@ -68,12 +72,10 @@ def main():
         universe_id = get_universe_id(game_id)
         if universe_id is None:
             universe_id = game_id
-        data = get_game_data(universe_id)
+        data = get_game_data(universe_id, script_start_time)
         if data:
             rows.append(data)
     save_csv(rows)
-    print("Done")
-
-
+    print(f"Done. Batch timestamp: {script_start_time}")
 if __name__ == "__main__":
     main()
