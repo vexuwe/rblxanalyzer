@@ -63,7 +63,6 @@ def save_csv(rows):
         writer.writerows(rows)
 
 def main():
-    # Фиксируем точное время старта скрипта (в формате ГГГГ-ММ-ДД ЧЧ:ММ:СС)
     script_start_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     ids = load_ids()
     rows = []
