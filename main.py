@@ -41,7 +41,7 @@ def load_ids():
         return [line.strip() for line in f if line.strip()]
 
 def save_csv(rows):
-    field_names = [
+field_names = [
         "game_id",
         "name",
         "creator",
@@ -58,8 +58,11 @@ def save_csv(rows):
     )
     with open(OUTPUT_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=field_names)
+
         if is_empty:
             writer.writeheader()
+        else:
+            f.write("\n")
         writer.writerows(rows)
 
 def main():
